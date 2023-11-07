@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... (head content remains the same) ... -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .job-listings {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .job {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+        }
+        .job-title {
+            font-weight: bold;
+        }
+        .job-description {
+            margin-top: 5px;
+        }
+        .job-link {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="job-listings">
+        <!-- Job listings will be populated here using JavaScript -->
+    </div>
+    <script>
+        const jobListingsContainer = document.querySelector('.job-listings');
+
+        // Replace with your API endpoint
+        const apiUrl = 'https://job-search-api1.p.rapidapi.com/v1/job-description-search?q=react%20native&page=1&country=India&city=Chennai';
+
+        fetch(apiUrl, {
+            headers: {
+                'X-RapidAPI-Host': 'job-search-api1.p.rapidapi.com',
+                'X-RapidAPI-Key': 'ef8534b15fmshcce41d3515c5a03p1d69bejsn4e0798968aec', // Replace with your API key
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const jobs = data.jobs || [];
+
+            jobs.forEach(job => {
+                const jobListing = document.createElement('div');
+                jobListing.classList.add('job');
+
+                const jobTitle = document.createElement('div');
+                jobTitle.classList.add('job-title');
+                jobTitle.innerText = job.company_name;
+
+                const jobDescription = document.createElement('div');
+                jobDescription.classList.add('job-description');
+                jobDescription.innerText = job.plain_text_description;
+
+                const jobLink = document.createElement('a');
+                jobLink.classList.add('job-link');
+                jobLink.href = job.application_url;
+                jobLink.target = '_blank';
+                jobLink.innerText = 'Apply';
+
+                jobListing.appendChild(jobTitle);
+                jobListing.appendChild(jobDescription);
+                jobListing.appendChild(jobLink);
+
+                jobListingsContainer.appendChild(jobListing);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching job data:', error);
+        });
+    </script>
+</body>
+</html>
